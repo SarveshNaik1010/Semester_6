@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager Pro</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Task Manager Pro</h1>
+      <p>stay organized and productive</p>
+    </header>
+
+    <main>
+      <div class="container">
+        <section id="input-section">
+          <h2>Add New Task</h2>
+
+          <form id="task-form">
+            <input
+              type="text"
+              id="task-input"
+              placeholder="what needs to be done?"
+              required
+            />
+
+            <div class="form-row">
+              <div class="field">
+                <label for="due-date">Due Date</label>
+                <input type="date" id="due-date" required />
+              </div>
+
+              <div class="field">
+                <label for="start-datetime">Start Date & Time</label>
+                <input type="datetime-local" id="start-datetime" required />
+              </div>
+
+              <div class="field">
+                <label for="end-datetime">End Date & Time</label>
+                <input type="datetime-local" id="end-datetime" required />
+              </div>
+            </div>
+
+            <button type="submit" id="add-btn">Add Task</button>
+          </form>
+        </section>
+
+        <section id="display-section">
+          <h2>Your Tasks</h2>
+          <p class="counter">
+            <strong>Total Tasks:</strong> <span id="task-count">0</span>
+          </p>
+
+          <ul id="task-list">
+            <li class="empty-msg">no tasks yet</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="container">
+        <section class="box box-purple">
+          <h2>Dates & Due Dates</h2>
+          <ul id="date-list">
+            <li class="empty-msg">no date info yet</li>
+          </ul>
+        </section>
+
+        <section class="box box-cyan">
+          <h2>Task Time Log</h2>
+          <ul id="time-list">
+            <li class="empty-msg">no time logs yet</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

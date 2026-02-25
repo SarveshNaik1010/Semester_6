@@ -1,4 +1,15 @@
+# %% Test Cell
+print("Working")
+
 print("Hello R")
+
+# %% First cell
+x <- 1:10
+mean(x)
+
+
+# %% Second cell
+plot(x)
 
 5 + 3      # Addition
 10 - 4     # Subtraction

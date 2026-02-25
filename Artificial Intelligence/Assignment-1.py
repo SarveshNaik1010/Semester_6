@@ -1,51 +1,54 @@
 # ////// TIC TAC TOE
-# Draw the board
-board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+def tic_tac_toe():
+    # Draw the board
+    board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 
-def print_board():
-    for i in range(0, 9, 3):
-        print(board[i], "|", board[i+1], "|", board[i+2])
-        if i < 6:
-            print("--+---+--")
+    def print_board():
+        for i in range(0, 9, 3):
+            print(board[i], "|", board[i+1], "|", board[i+2])
+            if i < 6:
+                print("--+---+--")
 
-# Win check condition
-def check_win(player):
-    wins = [
-        [0,1,2], [3,4,5], [6,7,8],  # rows
-        [0,3,6], [1,4,7], [2,5,8],  # columns
-        [0,4,8], [2,4,6]            # diagonals
-    ]
-    for w in wins:
-        if board[w[0]] == player and board[w[1]] == player and board[w[2]] == player:
-            return True
-    return False
+    # Win check condition
+    def check_win(player):
+        wins = [
+            [0,1,2], [3,4,5], [6,7,8],  # rows
+            [0,3,6], [1,4,7], [2,5,8],  # columns
+            [0,4,8], [2,4,6]            # diagonals
+        ]
+        for w in wins:
+            if board[w[0]] == player and board[w[1]] == player and board[w[2]] == player:
+                return True
+        return False
 
-def is_draw():
-    return ' ' not in board
+    def is_draw():
+        return ' ' not in board
 
-current_player = 'X'
+    current_player = 'X'
 
-while True:
-    print_board()
-    pos = int(input(f"Player {current_player}, enter position (1-9): ")) - 1
-
-    if board[pos] != ' ':
-        print("Invalid move!")
-        continue
-
-    board[pos] = current_player
-
-    if check_win(current_player):
+    while True:
         print_board()
-        print(f"Player {current_player} wins!")
-        break
+        pos = int(input(f"Player {current_player}, enter position (1-9): ")) - 1
 
-    if is_draw():
-        print_board()
-        print("Draw!")
-        break
+        if board[pos] != ' ':
+            print("Invalid move!")
+            continue
 
-    current_player = 'O' if current_player == 'X' else 'X'
+        board[pos] = current_player
+
+        if check_win(current_player):
+            print_board()
+            print(f"Player {current_player} wins!")
+            break
+
+        if is_draw():
+            print_board()
+            print("Draw!")
+            break
+
+        current_player = 'O' if current_player == 'X' else 'X'
+
+
 
 # ////// N QUEEN
 # N Queens Problem using Backtracking
@@ -95,7 +98,8 @@ def solve_n_queens(n):
     else:
         print("No solution")
 
-solve_n_queens(4)
+n = int(input("Enter the value of N: "))
+solve_n_queens(n)
 
 
 # ////// MAGIC SQUARE
@@ -124,5 +128,5 @@ def magic_square(n):
     for row in magic:
         print(row)
 
-# Example
-magic_square(3)
+num = int(input("Enter the length square: "))
+magic_square(num)

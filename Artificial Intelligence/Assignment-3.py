@@ -127,9 +127,9 @@ if __name__ == "__main__":
            [1,6,4],
            [7,0,5]]
     
-    print_state(initial)
+    print_state(initial_state)
 
-    result = hill_climbing(initial)
+    result = hill_climbing(initial_state)
 
     print("Final State:")
     print_state(result)

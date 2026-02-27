@@ -1,151 +1,95 @@
 from collections import deque
 import matplotlib.pyplot as plt
+import networkx as nx
 
-# ---------------- DFS ----------------
-def dfs(x, y, capA, capB, target, visited, path):
-    # Goal condition
-    if x == target or y == target:
-        path.append((x, y))
-        return True
+# ---------------- Node Class ----------------
+class Node:
+    def __init__(self, state):
+        self.state = state
+        self.left = None
+        self.right = None
 
-    # Avoid infinite loop
-    if (x, y) in visited:
-        return False
 
-    visited.add((x, y))
-    path.append((x, y))
+# ---------------- Generate Moves ----------------
+def generate_moves(x, y, capA, capB):
+    moves = []
 
-    # 1. Fill Jug A
-    if dfs(capA, y, capA, capB, target, visited, path):
-        return True
+    moves.append((capA, y))   # Fill A
+    moves.append((x, capB))   # Fill B
+    moves.append((0, y))      # Empty A
+    moves.append((x, 0))      # Empty B
 
-    # 2. Fill Jug B
-    if dfs(x, capB, capA, capB, target, visited, path):
-        return True
-
-    # 3. Empty Jug A
-    if dfs(0, y, capA, capB, target, visited, path):
-        return True
-
-    # 4. Empty Jug B
-    if dfs(x, 0, capA, capB, target, visited, path):
-        return True
-
-    # 5. Pour A -> B
     pour = min(x, capB - y)
-    if dfs(x - pour, y + pour, capA, capB, target, visited, path):
-        return True
+    moves.append((x - pour, y + pour))
 
-    # 6. Pour B -> A
     pour = min(y, capA - x)
-    if dfs(x + pour, y - pour, capA, capB, target, visited, path):
-        return True
+    moves.append((x + pour, y - pour))
 
-    path.pop()
-    return False
+    return moves
 
 
-# ---------------- BFS ----------------
-def bfs(capA, capB, target):
-    queue = deque()
-    visited = set()
+# ---------------- Build Binary Tree ----------------
+def build_binary_tree(capA, capB, max_nodes=15):
+    root = Node((0, 0))
+    queue = deque([root])
+    visited = set([(0, 0)])
 
-    queue.append((0, 0, []))
-    visited.add((0, 0))
+    while queue and len(visited) < max_nodes:
+        current = queue.popleft()
+        x, y = current.state
 
-    while queue:
-        x, y, path = queue.popleft()
-        path = path + [(x, y)]
+        children = []
 
-        if x == target or y == target:
-            return path
+        for move in generate_moves(x, y, capA, capB):
+            if move not in visited:
+                visited.add(move)
+                child_node = Node(move)
+                children.append(child_node)
+                queue.append(child_node)
 
-        states = [
-            (capA, y),     # Fill A
-            (x, capB),     # Fill B
-            (0, y),        # Empty A
-            (x, 0),        # Empty B
-        ]
+        # Strict Binary: only 2 children
+        if len(children) > 0:
+            current.left = children[0]
+        if len(children) > 1:
+            current.right = children[1]
 
-        # Pour A -> B
-        pour = min(x, capB - y)
-        states.append((x - pour, y + pour))
-
-        # Pour B -> A
-        pour = min(y, capA - x)
-        states.append((x + pour, y - pour))
-
-        for state in states:
-            if state not in visited:
-                visited.add(state)
-                queue.append((state[0], state[1], path))
-
-    return None
+    return root
 
 
-# ---------------- Plotting ----------------
-def plot_path(path, title):
-    x_vals = [state[0] for state in path]
-    y_vals = [state[1] for state in path]
+# ---------------- Convert Tree to Graph ----------------
+def add_edges(G, node):
+    if node is None:
+        return
 
-    plt.figure(figsize=(6, 6))
+    if node.left:
+        G.add_edge(str(node.state), str(node.left.state))
+        add_edges(G, node.left)
 
-    # Draw arrows between consecutive states
-    for i in range(len(path) - 1):
-        x1, y1 = path[i]
-        x2, y2 = path[i + 1]
+    if node.right:
+        G.add_edge(str(node.state), str(node.right.state))
+        add_edges(G, node.right)
 
-        plt.arrow(
-            x1, y1,
-            x2 - x1, y2 - y1,
-            length_includes_head=True,
-            head_width=0.15,
-            head_length=0.15,
-            fc='black',
-            ec='black'
-        )
 
-    # Plot points
-    plt.plot(x_vals, y_vals, marker='o')
+# ---------------- Visualize Tree ----------------
+def visualize_tree(root):
+    G = nx.DiGraph()
+    add_edges(G, root)
 
-    # Label each state with step number
-    for i, (x, y) in enumerate(path):
-        plt.text(x + 0.05, y + 0.05, f"{i}:({x},{y})", fontsize=9)
+    pos = nx.nx_pydot.graphviz_layout(G, prog="dot")
 
-    plt.xlabel("Jug A")
-    plt.ylabel("Jug B")
-    plt.title(title)
-    plt.grid(True)
-    plt.xlim(0, max(x_vals) + 1)
-    plt.ylim(0, max(y_vals) + 1)
+    plt.figure(figsize=(10, 8))
+    nx.draw(G, pos,
+            with_labels=True,
+            node_size=2500,
+            font_size=10)
+
+    plt.title("Binary Tree Representation of Water Jug")
     plt.show()
 
 
-
-# ---------------- Driver Code ----------------
+# ---------------- Driver ----------------
 capA = int(input("Enter capacity of Jug A: "))
 capB = int(input("Enter capacity of Jug B: "))
-target = int(input("Enter target quantity: "))
 
-# DFS Execution
-visited = set()
-dfs_path = []
-
-if dfs(0, 0, capA, capB, target, visited, dfs_path):
-    print("\nDFS Solution Path:")
-    for state in dfs_path:
-        print(state)
-    plot_path(dfs_path, "DFS Water Jug State Space Path")
-else:
-    print("No DFS solution exists")
-
-# BFS Execution
-bfs_path = bfs(capA, capB, target)
-
-if bfs_path:
-    print("\nBFS Solution Path:")
-    for state in bfs_path:
-        print(state)
-    plot_path(bfs_path, "BFS Water Jug Shortest Path")
-else:
-    print("No BFS solution exists")
+root = build_binary_tree(capA, capB)
+visualize_tree(root)

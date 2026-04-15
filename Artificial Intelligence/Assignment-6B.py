@@ -70,12 +70,15 @@ DEFAULT_SLOTS = {
 }
 
 DEFAULT_WORDLIST = [
-    "CRANE", "SHARE", "ALTAR", "CASTE", "RESTS",
-    "CHORE", "ANGER", "NASAL", "TERSE", "EARTH",
-    "STARS", "LATER", "SOLAR", "TREES", "RACES",
-    "LANES", "RALES", "EARNS", "ARLES", "SNARE",
+    "CRANE", "SLATE", "PLANE", "GRACE", "BRACE",
+    "TRACE", "PLACE", "GLARE", "FLARE", "SHARE",
+    "SCARE", "SPARE", "STARE", "STORE", "SCORE",
+    "SHORE", "CHORE", "SMORE", "SNORE", "SWORE",
+    "ALERT", "ALTER", "LATER", "ARTEL", "RATEL",
+    "EARTH", "HEART", "HATER", "RHEAT", "THREA",
+    "ANGLE", "ANGEL", "GLEAN", "GENAL", "GLENA",
+    "LEARN", "RENAL", "LANER", "REALN", "EARLN"
 ]
-
 
 # =====================================================================
 #  CSP SOLVER (Backtracking + AC-3)
@@ -125,7 +128,7 @@ def solve_crossword(slots, wordlist):
         slot = remaining[0]
         for word in domains[slot]:
             if word in assign.values():
-                continue
+                pass
             if check(slot, word, assign):
                 assign[slot] = word
                 steps.append((dict(assign), slot, word, True))

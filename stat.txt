@@ -1,0 +1,486 @@
+# Assignment 1
+
+mystring <- "Statistical Data Analysis and Visualization Welcome to R Studio"
+print(mystring)
+
+print("Welcome to R Studio")
+
+ls()
+rm(list = ls())
+
+print("Basic Commands")
+
+10 + 5
+10 - 5
+10 * 5
+10 / 5
+10 ^ 2
+10 %% 3
+
+print("Variables")
+
+x <- 10
+y <- 5
+x + y
+
+print("Data Types")
+
+a <- 10
+b <- "R"
+c <- TRUE
+
+class(a)
+class(b)
+class(c)
+
+print("Vectors Operation")
+
+v <- c(1, 2, 3, 4)
+v
+v + 2
+v * 2
+
+print("Subsetting Vectors")
+
+v[1]
+v[2:3]
+
+print("Logical Operators")
+
+x <- 10
+y <- 5
+
+x > y
+x == y
+x != y
+
+print("Matrix and Matrix Calculation")
+
+m <- matrix(c(1, 2, 3, 4), nrow = 2)
+m
+m + 2
+
+print("List")
+
+mylist <- list(name = "Aafiya", age = 20)
+mylist
+
+print("Data Frame")
+
+students <- data.frame(
+  Name = c("Aafiya", "Ali"),
+  Age = c(20, 21)
+)
+
+students
+
+print("End Of the Code")
+
+
+# Assignment 2
+
+print("Programming in R - control flow - if/else - for loop")
+
+x <- 10
+
+if (x > 5) {
+  print("x is greater than 5")
+} else {
+  print("x is less than or equal to 5")
+}
+
+print("For Loop")
+
+for (i in 1:5) {
+  print(i)
+}
+
+print("Functions in R")
+
+add <- function(a, b) {
+  return(a + b)
+}
+
+add(3, 4)
+
+print("Reading CSV File")
+
+getwd()
+# setwd("C:/Users/Aarba/Downloads")
+
+data <- read.csv("data.csv")
+View(data)
+head(data)
+
+print("Reading Built-in Dataset")
+
+data(iris)
+head(iris)
+
+# Assignment 3
+
+getwd()
+# setwd("C:/Users/Aarba/Downloads")
+
+data1 <- read.csv("student_performance.csv")
+data2 <- read.csv("data.csv")
+data3 <- read.csv("Statistical_Practice_Data_New.csv")
+
+organizations <- na.omit(data1)
+people <- na.omit(data2)
+products <- na.omit(data3)
+
+organizations_num <- organizations[sapply(organizations, is.numeric)]
+people_num <- people[sapply(people, is.numeric)]
+products_num <- products[sapply(products, is.numeric)]
+
+str(organizations_num)
+str(people_num)
+str(products_num)
+
+summary_stats <- function(data) {
+
+  cat("Mean:", mean(data, na.rm = TRUE), "\n")
+  cat("Median:", median(data, na.rm = TRUE), "\n")
+  cat("Standard Deviation:", sd(data, na.rm = TRUE), "\n")
+  cat("Variance:", var(data, na.rm = TRUE), "\n")
+  cat("Minimum:", min(data, na.rm = TRUE), "\n")
+  cat("Maximum:", max(data, na.rm = TRUE), "\n")
+  cat("Range:", diff(range(data, na.rm = TRUE)), "\n")
+  
+  cat("Quartiles:\n")
+  print(quantile(data, na.rm = TRUE))
+  
+  cat("IQR:", IQR(data, na.rm = TRUE), "\n")
+  cat("Coefficient of Variation:", sd(data, na.rm = TRUE) / mean(data, na.rm = TRUE), "\n\n")
+}
+
+print("Organizations Dataset Summary")
+apply(organizations_num, 2, summary_stats)
+
+print("People Dataset Summary")
+apply(people_num, 2, summary_stats)
+
+print("Products Dataset Summary")
+apply(products_num, 2, summary_stats)
+
+# Assignment 4
+
+Smartphones_Usage_Productivity <- data.frame(
+
+  User_ID = paste0("U", sprintf("%03d", 1:150)),
+
+  Gender = sample(c("Male", "Female"), 150, replace = TRUE),
+
+  Occupation = sample(c("Professional", "Student", "Freelancer"), 150, replace = TRUE),
+
+  Phone_Type = sample(c("Android", "iPhone"), 150, replace = TRUE),
+
+  Battery_Usage = round(runif(150, 0.5, 5.0), 1),
+
+  Screen_On_Time = round(runif(150, 2.0, 10.0), 1),
+
+  App_Usage_Sessions = sample(4:30, 150, replace = TRUE),
+
+  Total_App_Time = round(runif(150, 3.0, 12.0), 1),
+
+  Productivity_Level = sample(1:10, 150, replace = TRUE),
+
+  Age_Group = sample(20:45, 150, replace = TRUE),
+
+  Calls_Made = sample(0:8, 150, replace = TRUE),
+
+  Overall_Score = round(runif(150, 4.0, 10.0), 1)
+
+)
+
+df <- Smartphones_Usage_Productivity
+
+head(df)
+str(df)
+
+table(df$Occupation)
+prop.table(table(df$Occupation)) * 100
+
+
+library(ggplot2)
+
+ggplot(df, aes(x = Phone_Type)) +
+  geom_bar(fill = c("steelblue", "orange")) +
+  labs(title = "Phone Type Distribution", x = "Phone Type", y = "Count") +
+  theme_minimal()
+
+
+pie(table(df$Gender),
+    main = "Gender Distribution",
+    col = c("lightblue", "lightcoral"),
+    radius = 1)
+
+
+hist(df$Screen_On_Time,
+     breaks = 12,
+     main = "Histogram: Screen On Time",
+     xlab = "Hours",
+     ylab = "Frequency",
+     col = "lightgreen",
+     border = "darkgreen")
+
+
+h <- hist(df$Screen_On_Time, breaks = 12, plot = FALSE)
+
+plot(h$mids, h$counts,
+     type = "o",
+     pch = 19,
+     col = "blue",
+     lwd = 2,
+     main = "Frequency Polygon: Screen Time",
+     xlab = "Screen On Time (Hours)",
+     ylab = "Frequency")
+
+lines(c(min(h$breaks), max(h$breaks)), c(0, 0), col = "black", lty = 2)
+
+
+boxplot(Screen_On_Time ~ Gender,
+        data = df,
+        main = "Box Plot: Screen Time by Gender",
+        ylab = "Screen On Time (Hours)",
+        col = c("lightblue", "lightpink"),
+        notch = TRUE)
+
+
+plot(df$Screen_On_Time, df$Total_App_Time,
+     main = "Scatter Plot: Screen Time vs Total App Time",
+     xlab = "Screen On Time (hrs)",
+     ylab = "Total App Time (hrs)",
+     pch = 16,
+     col = "red",
+     cex = 1.2)
+
+abline(lm(Total_App_Time ~ Screen_On_Time, data = df),
+       col = "blue",
+       lwd = 2)
+
+
+# Assignment 5
+
+cat("===== PROBABILITY DISTRIBUTIONS =====\n\n")
+
+
+cat("---- BINOMIAL DISTRIBUTION ----\n")
+
+binom_prob <- dbinom(3, size = 5, prob = 0.5)
+cat("P(X = 3) =", binom_prob, "\n")
+
+binom_cum <- pbinom(3, size = 5, prob = 0.5)
+cat("P(X ≤ 3) =", binom_cum, "\n\n")
+
+
+cat("---- POISSON DISTRIBUTION ----\n")
+
+pois_prob <- dpois(2, lambda = 4)
+cat("P(X = 2) =", pois_prob, "\n")
+
+pois_cum <- ppois(2, lambda = 4)
+cat("P(X ≤ 2) =", pois_cum, "\n\n")
+
+
+cat("---- NORMAL DISTRIBUTION ----\n")
+
+norm_prob <- pnorm(60, mean = 50, sd = 10)
+cat("P(X ≤ 60) =", norm_prob, "\n")
+
+norm_density <- dnorm(60, mean = 50, sd = 10)
+cat("Density at X = 60 =", norm_density, "\n\n")
+
+
+cat("---- CHI-SQUARED DISTRIBUTION ----\n")
+
+chi_prob <- pchisq(10, df = 5)
+cat("P(X ≤ 10) =", chi_prob, "\n")
+
+chi_density <- dchisq(10, df = 5)
+cat("Density at X = 10 =", chi_density, "\n\n")
+
+
+cat("---- STUDENT t DISTRIBUTION ----\n")
+
+t_prob <- pt(1.5, df = 10)
+cat("P(T ≤ 1.5) =", t_prob, "\n")
+
+t_density <- dt(1.5, df = 10)
+cat("Density at T = 1.5 =", t_density, "\n\n")
+
+
+cat("---- F DISTRIBUTION ----\n")
+
+f_prob <- pf(2, df1 = 5, df2 = 10)
+cat("P(F ≤ 2) =", f_prob, "\n")
+
+f_density <- df(2, df1 = 5, df2 = 10)
+cat("Density at F = 2 =", f_density, "\n\n")
+
+
+cat("---- CONFIDENCE INTERVAL ----\n")
+
+sample_data <- c(45, 50, 55, 60, 65, 70, 75)
+
+ci <- t.test(sample_data, conf.level = 0.95)
+
+cat("95% Confidence Interval:\n")
+print(ci$conf.int)
+
+cat("\n===== END =====\n")
+
+
+# Assignment 6
+
+cat("----- ONE SAMPLE t-TEST -----\n")
+
+data1 <- c(52, 55, 58, 60, 62, 65, 67)
+
+result1 <- t.test(data1, mu = 60)
+
+print(result1)
+
+
+cat("\n----- TWO SAMPLE t-TEST -----\n")
+
+group1 <- c(45, 50, 55, 60, 65)
+group2 <- c(40, 42, 48, 50, 52)
+
+result2 <- t.test(group1, group2)
+
+print(result2)
+
+
+cat("\n----- INDEPENDENT SAMPLE t-TEST (DATAFRAME) -----\n")
+
+data2 <- data.frame(
+  score = c(85, 90, 88, 75, 78, 80),
+  group = c("A", "A", "A", "B", "B", "B")
+)
+
+result3 <- t.test(score ~ group, data = data2)
+
+print(result3)
+
+
+cat("\n----- NON-PARAMETRIC TEST (WILCOXON) -----\n")
+
+np_group1 <- c(10, 12, 14, 16, 18)
+np_group2 <- c(9, 11, 13, 15, 17)
+
+result4 <- wilcox.test(np_group1, np_group2)
+
+print(result4)
+
+
+cat("\n----- ONE-WAY ANOVA -----\n")
+
+data3 <- data.frame(
+  score = c(85, 90, 88, 75, 78, 80, 92, 95, 94),
+  group = factor(c("A", "A", "A", "B", "B", "B", "C", "C", "C"))
+)
+
+anova1 <- aov(score ~ group, data = data3)
+
+print(summary(anova1))
+
+
+cat("\n----- TWO-WAY ANOVA -----\n")
+
+data4 <- data.frame(
+  score = c(85, 90, 88, 75, 78, 80, 92, 95, 94, 70, 72, 74),
+  method = factor(rep(c("A", "B", "C"), each = 4)),
+  gender = factor(rep(c("M", "F"), times = 6))
+)
+
+anova2 <- aov(score ~ method * gender, data = data4)
+
+print(summary(anova2))
+
+
+
+# Assignment 7
+
+cat("----- INDEPENDENT SAMPLE t-TEST -----\n")
+
+data5 <- data.frame(
+  marks = c(70, 75, 80, 65, 60, 68),
+  class = c("X", "X", "X", "Y", "Y", "Y")
+)
+
+result5 <- t.test(marks ~ class, data = data5)
+
+print(result5)
+
+
+cat("\n----- F-TEST (VARIANCE TEST) -----\n")
+
+f_group1 <- c(10, 12, 14, 16, 18)
+f_group2 <- c(9, 11, 13, 15, 17)
+
+result6 <- var.test(f_group1, f_group2)
+
+print(result6)
+
+
+cat("\n----- CHI-SQUARE TEST (categorical variables) -----\n")
+
+matrix_data <- matrix(c(20, 30, 25, 35), nrow = 2)
+
+result7 <- chisq.test(matrix_data)
+
+print(result7)
+
+# Assignment 8
+
+cat("===== CONFIDENCE INTERVAL ESTIMATION =====\n\n")
+
+
+cat("---- PROPORTION TEST ----\n")
+
+successes <- 60
+total <- 100
+
+prop_test_result <- prop.test(successes, total, conf.level = 0.95)
+
+print(prop_test_result)
+
+
+cat("\n---- Z-TEST ----\n")
+
+sample_data <- c(52, 55, 49, 50, 53, 48, 54)
+
+sample_mean <- mean(sample_data)
+sample_sd <- sd(sample_data)
+n <- length(sample_data)
+
+se <- sample_sd / sqrt(n)
+
+z_value <- (sample_mean - 50) / se
+cat("Z-value =", z_value, "\n")
+
+p_value_z <- 2 * (1 - pnorm(abs(z_value)))
+cat("p-value =", p_value_z, "\n")
+
+
+cat("\n---- T-TEST ----\n")
+
+t_test_result <- t.test(sample_data, mu = 50, conf.level = 0.95)
+
+print(t_test_result)
+
+
+cat("\n---- MANUAL CONFIDENCE INTERVAL ----\n")
+
+t_critical <- qt(0.975, df = n - 1)
+
+lower_ci <- sample_mean - t_critical * se
+upper_ci <- sample_mean + t_critical * se
+
+cat("95% Confidence Interval:\n")
+cat("Lower =", lower_ci, "\n")
+cat("Upper =", upper_ci, "\n")
+
+cat("\n===== END =====\n")
